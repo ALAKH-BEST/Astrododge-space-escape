@@ -35,57 +35,99 @@ export default function GamePage() {
                   ASTRODODGE
                 </h1>
                 <p className="text-xl text-muted-foreground font-mono max-w-lg mx-auto">
-                  Navigate the asteroid field. Survive as long as you can.
+                  Master the void. Navigate the asteroid fields of Sector 7 and survive the cosmic onslaught.
                 </p>
               </div>
 
-              <Card className="w-full max-w-md p-6 border-primary/20 bg-card/50 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-left">
-                    <div className="text-xs text-muted-foreground font-mono uppercase">Current Vessel</div>
-                    <div className="font-display text-lg text-primary">{currentShip?.name ?? "Vanguard V1"}</div>
-                  </div>
-                  <Rocket className="w-8 h-8 text-primary" />
-                </div>
-                <Button className="w-full h-14 text-lg font-display" onClick={() => setShowGame(true)}>
-                  <Play className="mr-2 h-5 w-5" />
-                  BEGIN MISSION
+              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                <Button 
+                  onClick={() => setShowGame(true)}
+                  size="lg"
+                  className="flex-1 h-16 text-xl font-display tracking-widest bg-gradient-to-r from-primary to-accent hover:scale-105 transition-all shadow-xl shadow-primary/20"
+                >
+                  <Play className="mr-2 h-6 w-6 fill-current" />
+                  INITIATE MISSION
                 </Button>
-              </Card>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl">
-                <Card className="p-4 bg-card/40 border-border/50">
-                  <Target className="w-6 h-6 text-secondary mx-auto mb-2" />
-                  <div className="font-display text-sm">SURVIVE</div>
-                  <div className="text-xs text-muted-foreground mt-1">Avoid incoming asteroids</div>
-                </Card>
-                <Card className="p-4 bg-card/40 border-border/50">
-                  <Trophy className="w-6 h-6 text-accent mx-auto mb-2" />
-                  <div className="font-display text-sm">SCORE</div>
-                  <div className="text-xs text-muted-foreground mt-1">Climb the leaderboard</div>
-                </Card>
-                <Card className="p-4 bg-card/40 border-border/50">
-                  <Info className="w-6 h-6 text-primary mx-auto mb-2" />
-                  <div className="font-display text-sm">MASTER</div>
-                  <div className="text-xs text-muted-foreground mt-1">Choose your ship wisely</div>
-                </Card>
               </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mt-8">
+                <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur">
+                  <Target className="w-6 h-6 text-accent mx-auto mb-2" />
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase">Objective</div>
+                  <div className="text-sm font-bold text-foreground">Survive</div>
+                </div>
+                <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur">
+                  <Rocket className="w-6 h-6 text-primary mx-auto mb-2" />
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase">Ship</div>
+                  <div className="text-sm font-bold text-foreground">{currentShip.name}</div>
+                </div>
+                <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur">
+                  <Trophy className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase">Status</div>
+                  <div className="text-sm font-bold text-foreground">Ready</div>
+                </div>
+              </div>
+
+              <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em] mt-12">
+                Made by Alakh
+              </p>
             </motion.div>
           ) : (
             <motion.div
               key="game"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-8"
             >
-              <Button variant="outline" onClick={() => setShowGame(false)}>
-                ← Return to Launch Bay
-              </Button>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-4xl font-display font-bold text-foreground mb-2">
+                    SECTOR 7: ASTEROID FIELD
+                  </h1>
+                  <p className="text-muted-foreground font-mono">
+                    OBJECTIVE: SURVIVE AS LONG AS POSSIBLE
+                  </p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowGame(false)}
+                  className="font-mono text-[10px] tracking-widest uppercase border-white/10"
+                >
+                  Abort Mission
+                </Button>
+              </div>
+
               <GameCanvas />
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <StatsCard label="CURRENT RANK" value="CADET" delay={0} />
+                <StatsCard label="BEST SCORE" value="---" delay={100} />
+                <StatsCard label="SHIP STATUS" value={`${currentShip.name} · OPERATIONAL`} delay={200} />
+              </div>
+              
+              <div className="text-center">
+                <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
+                  Made by Alakh
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     </GameLayout>
+  );
+}
+
+function StatsCard({ label, value, delay }: { label: string; value: string; delay: number }) {
+  return (
+    <Card className="bg-card/30 backdrop-blur border-white/5 p-6 animate-in slide-in-from-bottom-4 fade-in duration-700" style={{ animationDelay: `${delay}ms` }}>
+      <div className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-2">
+        {label}
+      </div>
+      <div className="text-2xl font-display font-bold text-foreground">
+        {value}
+      </div>
+    </Card>
   );
 }
